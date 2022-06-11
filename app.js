@@ -15,7 +15,7 @@ function recurse(root) {
         const fullpath = path.join(root, dirent.name);
         if (dirent.isDirectory()) {
             recurse(fullpath);
-        } else if (dirent.isFile()) {
+        } else if (dirent.isFile() && (dirent.name === 'annotations.json')) {
             const stats = fs.statSync(fullpath);
             const allfeatures = (stats.mtime.getTime() > treshhold.getTime());
 
