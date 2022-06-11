@@ -2,10 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 
-//const conandatapath = '/home/ce/.conan_server/data';
-const conandatapath = './data';
+const conandatapath = '/home/ce/.conan_server/data';
 
-const treshhold = Date("2022-06-10");
+const treshhold = new Date("2022-06-10");
 
 function recurse(root) {
     const dir = fs.opendirSync(root);
@@ -13,15 +12,29 @@ function recurse(root) {
         const dirent = dir.readSync();
         if (!dirent) break;
 
-        fullpath = path.join(root, direct.name);
+        const fullpath = path.join(root, dirent.name);
         if (dirent.isDirectory()) {
             recurse(fullpath);
-        } else {
+        } else if (dirent.isFile()) {
             const stats = fs.statSync(fullpath);
-            if (stats.mtime.)
-            const fd = fs.openSync(fullpath, "rw");
-            if (fd) {
-                console.log(JSON.stringify(dirent));
+            const allfeatures = (stats.mtime.getTime() > treshhold.getTime());
+
+            const buffer = fs.readFileSync(fullpath);
+            if (buffer) {
+                const content = buffer.toString('utf8');
+                const json = JSON.parse(content);
+                if (Object.keys(json).length === 1 && json.commithash) {
+                    json.linker = '/opt/compiler-explorer/gcc-11.1.0';
+                    if (allfeatures) {
+                        json.build_method = '--all-features';
+                    } else {
+                        json.build_method = '';
+                    }
+                    console.log('writing to ' + fullpath + '(' + json.build_method + ')');
+                    fs.writeFileSync(fullpath, JSON.stringify(json));
+                } else {
+                    console.log('skipping ' + fullpath);
+                }
             }
         }
     }
