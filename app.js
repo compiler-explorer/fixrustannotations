@@ -31,7 +31,7 @@ function recurse(root) {
                         json.build_method = '';
                     }
                     console.log('writing to ' + fullpath + '(' + json.build_method + ')');
-                    fs.writeFileSync(fullpath, JSON.stringify(json));
+                    //fs.writeFileSync(fullpath, JSON.stringify(json));
                 } else {
                     console.log('skipping ' + fullpath);
                 }
