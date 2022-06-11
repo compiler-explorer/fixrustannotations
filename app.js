@@ -4,7 +4,7 @@ const path = require('path');
 
 const conandatapath = '/home/ce/.conan_server/data';
 
-const treshhold = new Date("2022-06-10");
+const treshhold = new Date("2022-06-09");
 
 function recurse(root) {
     const dir = fs.opendirSync(root);
