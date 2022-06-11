@@ -19,6 +19,16 @@ function recurse(root) {
             const stats = fs.statSync(fullpath);
             const allfeatures = (stats.mtime.getTime() > treshhold.getTime());
 
+            let isRust = false;
+
+            const conaninfopath = path.join(root, '0/conaninfo.txt');
+            const conaninfo = fs.readFileSync(conaninfopath);
+            if (conaninfo) {
+                isRust = conaninfo.toString('utf8').includes('compiler=rust');
+            }
+
+            if (!isRust) continue;
+
             const buffer = fs.readFileSync(fullpath);
             if (buffer) {
                 const content = buffer.toString('utf8');
